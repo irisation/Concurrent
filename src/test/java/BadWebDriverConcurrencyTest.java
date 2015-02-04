@@ -1,23 +1,32 @@
+import helpers.WebDriverSingleton;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-public class BadWebDriverConcurrencyTest {
-    private WebDriver driver;
+import java.net.MalformedURLException;
 
-    @Test
-    public void test1() throws InterruptedException {
-        driver = new InternetExplorerDriver();
-        Thread.sleep(6000);
-        driver.get("http://www.onliner.by");
+public class BadWebDriverConcurrencyTest {
+
+    @AfterMethod
+    public void teardown() throws InterruptedException {
+        Thread.sleep(10000);
+        WebDriverSingleton.close();
     }
 
     @Test
-    public void test2() throws InterruptedException {
+    public void test1() throws InterruptedException, MalformedURLException {
+        WebDriverSingleton.initDriver("ie");
+        Thread.sleep(6000);
+        WebDriverSingleton.getDriver().get("http://www.onliner.by");
+    }
+
+    @Test
+    public void test2() throws InterruptedException, MalformedURLException {
         Thread.sleep(5000);
-        driver = new ChromeDriver();
-        driver.get("http://www.tut.by");
+        WebDriverSingleton.initDriver("chrome");
+        WebDriverSingleton.getDriver().get("http://www.tut.by");
     }
     //mvn -Dtest=BadWebDriverConcurrencyTest test - последовательно
     //mvn -Dtest=BadWebDriverConcurrencyTest -Dparallel=methods -DthreadCount=2 test -методы параллельно, классы послед.
