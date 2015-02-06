@@ -1,7 +1,5 @@
 import helpers.WebDriverSingleton;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
@@ -17,7 +15,7 @@ public class BadWebDriverConcurrencyTest {
 
     @Test
     public void test1() throws InterruptedException, MalformedURLException {
-        WebDriverSingleton.initDriver("ie");
+        WebDriverSingleton.initDriver("firefox");
         Thread.sleep(6000);
         WebDriverSingleton.getDriver().get("http://www.onliner.by");
     }
